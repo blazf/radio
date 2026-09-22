@@ -12,8 +12,8 @@ final class RadioPlayer: ObservableObject {
     }
 
     @Published private(set) var current: Station?
-    @Published private(set) var status: Status = .stopped
-    @Published private(set) var nowPlaying: String?
+    @Published private(set) var status: Status = .stopped { didSet { syncRemote() } }
+    @Published private(set) var nowPlaying: String? { didSet { syncRemote() } }
     @Published var volume: Float = 0.8 {
         didSet { player?.volume = volume }
     }
@@ -31,6 +31,15 @@ final class RadioPlayer: ObservableObject {
     private var observers: [NSKeyValueObservation] = []
     private var metadataOutput: AVPlayerItemMetadataOutput?
     private var metadataDelegate: MetadataDelegate?
+    private var remote: RemoteCommands?
+
+    init() {
+        remote = RemoteCommands { [weak self] in self?.stop() }
+    }
+
+    private func syncRemote() {
+        remote?.update(station: current, nowPlaying: nowPlaying, playing: isActive)
+    }
 
     func toggle(_ station: Station) {
         if current == station, status != .stopped {
