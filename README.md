@@ -4,6 +4,8 @@ A tiny macOS menu bar app for listening to Slovenian radio stations.
 
 Stations: Val 202, Radio Prvi, Radio Ars, Radio Sora, Rock Radio, Radio Si.
 
+Plays on this Mac or on any Sonos room/group on the local network ("Play On" picker; speakers are found via Bonjour and controlled over the local UPnP API).
+
 ## Build
 
 Requires macOS 14+ and Xcode command line tools.
@@ -17,6 +19,6 @@ open build/Radio.app
 
 ## Layout
 
-- `Sources/Radio/` – SwiftUI app: menu bar UI, `AVPlayer` wrapper, station list, login item toggle
+- `Sources/Radio/` – SwiftUI app: menu bar UI, `AVPlayer` wrapper, Sonos discovery/control, station list, login item toggle
 - `Resources/` – app icon and station logos
 - `Tools/` – scripts used to generate the app icon

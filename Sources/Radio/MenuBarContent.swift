@@ -14,7 +14,7 @@ struct MenuBarContent: View {
             case .buffering:
                 Text("Connecting to \(player.current?.name ?? "")…")
             case .playing:
-                Text("Playing \(player.current?.name ?? "")")
+                Text("Playing \(player.current?.name ?? "")" + (player.output == .local ? "" : " on \(player.output.name)"))
                 if let song = player.nowPlaying {
                     Text(song)
                 }
@@ -37,6 +37,10 @@ struct MenuBarContent: View {
                 }
             }
         }
+
+        Divider()
+
+        OutputPicker()
 
         Divider()
 

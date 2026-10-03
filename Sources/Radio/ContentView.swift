@@ -16,15 +16,26 @@ struct ContentView: View {
 
             Divider()
 
-            HStack(spacing: 12) {
+            VStack(spacing: 12) {
                 statusView
-                Spacer()
-                Image(systemName: "speaker.wave.2.fill")
-                    .foregroundStyle(.secondary)
-                Slider(value: $player.volume, in: 0...1)
-                    .frame(width: 110)
+                    .frame(maxWidth: .infinity, minHeight: 20, alignment: .leading)
+
+                HStack(spacing: 10) {
+                    OutputPicker()
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                        .fixedSize()
+                    Spacer()
+                    Image(systemName: "speaker.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Slider(value: $player.volume, in: 0...1)
+                        .frame(width: 140)
+                    Image(systemName: "speaker.wave.3.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-            .frame(height: 28)
         }
         .padding(20)
         .frame(width: 460)
@@ -43,21 +54,31 @@ struct ContentView: View {
             }
             .foregroundStyle(.secondary)
         case .playing:
-            VStack(alignment: .leading, spacing: 2) {
-                Label(player.current?.name ?? "", systemImage: "dot.radiowaves.left.and.right")
-                    .fontWeight(.medium)
-                if let now = player.nowPlaying {
-                    Text(now)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                }
-            }
+            (Text(player.current?.name ?? "").fontWeight(.semibold)
+                + Text(player.nowPlaying.map { "  ·  \($0)" } ?? "").foregroundColor(.secondary))
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .help(player.nowPlaying ?? "")
         case .failed(let message):
             Label(message, systemImage: "exclamationmark.triangle.fill")
                 .foregroundStyle(.red)
                 .lineLimit(1)
+        }
+    }
+}
+
+/// Chooses between this Mac and the Sonos groups found on the network.
+struct OutputPicker: View {
+    @EnvironmentObject private var player: RadioPlayer
+
+    var body: some View {
+        Picker("Play On", selection: Binding(
+            get: { player.output },
+            set: { player.setOutput($0) }
+        )) {
+            ForEach(player.availableOutputs, id: \.self) { output in
+                Label(output.name, systemImage: output.systemImage).tag(output)
+            }
         }
     }
 }

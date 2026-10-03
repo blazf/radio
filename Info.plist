@@ -24,8 +24,16 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Radio looks for Sonos speakers on your network so it can play stations on them.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_sonos._tcp</string>
+    </array>
     <key>NSAppTransportSecurity</key>
     <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
         <key>NSExceptionDomains</key>
         <dict>
             <key>radio-sora.si</key>
